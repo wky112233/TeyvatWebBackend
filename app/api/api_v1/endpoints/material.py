@@ -21,6 +21,14 @@ def get_materials(db: Session = Depends(get_db)):
     return material
 
 
+@router.get("/materialsByFood/", response_model=list[schemas.MaterialBase], operation_id="GetMaterialsByFood")
+def get_materials_by_food_id(food_id: int, db: Session = Depends(get_db)):
+    materials = crud.get_all_material_by_food_id(db, food_id)
+    if not materials:
+        raise HTTPException(status_code=404, detail="No material")
+    return materials
+
+
 @router.post("/material", response_model=schemas.MaterialInDBBase, status_code=201)
 def create_material(material: schemas.MaterialCreate, db: Session = Depends(get_db)):
     material = crud.create_material(db, material=material)

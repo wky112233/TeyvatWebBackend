@@ -68,7 +68,7 @@ class LivingBeingType(Base):
 
 
 class LivingBeing(Base):
-    __tablename__ = 'living_being'
+    __tablename__ = 'living_beings'
 
     living_being_id = Column(Integer, primary_key=True, autoincrement=True)
     living_being_name = Column(String(255), nullable=False, unique=True)
@@ -89,7 +89,7 @@ class MaterialType(Base):
 
 
 class Material(Base):
-    __tablename__ = 'material'
+    __tablename__ = 'materials'
 
     material_id = Column(Integer, primary_key=True, autoincrement=True)
     material_name = Column(Text, nullable=False)

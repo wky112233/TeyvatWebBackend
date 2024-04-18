@@ -5,7 +5,7 @@ from ....dependencies import get_db
 router = APIRouter()
 
 
-@router.get("/allCharacter", response_model=list[schemas.CharactersWithA], operation_id="read_all_characters")
+@router.get("/allCharacter", response_model=list[schemas.CharactersInDBBase], operation_id="read_all_characters")
 def read_all_characters(db: Session = Depends(get_db)):
     characters = crud.get_all_characters(db)
     if characters is None:

@@ -8,24 +8,12 @@ def get_character_by_name(db: Session, name: str):
     return db.query(models.Characters).filter(models.Characters.character_name == name).all()
 
 
+def get_character_by_region(db: Session, name: str):
+    return db.query(models.Characters).filter(models.Characters.character_name == name).all()
+
+
 def get_all_characters(db: Session):
-    return db.execute(
-        select(
-            models.Characters.character_name,
-            models.Characters.birthday_month,
-            models.Characters.birthday_date,
-            models.Characters.title,
-            models.Characters.vision,
-            models.Characters.constellation,
-            models.Characters.avatar_img,
-            models.Characters.avatar_icon_img,
-            models.Characters.namecard_img,
-            models.Affiliation.affiliation
-        ).join(
-            models.Affiliation,
-            models.Characters.affiliation_id == models.Affiliation.affiliation_id
-        )
-    ).all()
+    return db.query(models.Characters).all()
 
 
 def create_character(db: Session, character: schemas.CharactersCreate):
@@ -122,6 +110,10 @@ def get_all_foods(db: Session):
     return db.query(models.Food).all()
 
 
+def get_food_by_id(db: Session, id: int):
+    return db.query(models.Food).filter(models.Food.food_id == id).first()
+
+
 def create_food(db: Session, food: schemas.FoodCreate):
     db_food = models.Food(
         food_name=food.food_name,
@@ -159,6 +151,14 @@ def get_all_material_types(db: Session):
 
 def get_all_material(db: Session):
     return db.query(models.Material).all()
+
+
+def get_all_material_by_food_id(db: Session, food_id: int):
+    query = db.query(models.Material) \
+        .join(models.FoodToMaterial, models.FoodToMaterial.material_id == models.Material.material_id) \
+        .filter(models.FoodToMaterial.food_id == food_id)
+    print(query.statement)  # 输出SQL语句检查是否正确
+    return query.all()
 
 
 def create_material(db: Session, material: schemas.MaterialCreate):

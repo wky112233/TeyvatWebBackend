@@ -19,6 +19,16 @@ def get_foods(db: Session = Depends(get_db)):
     return foods
 
 
+@router.get("food/{food_id}", response_model=schemas.FoodInDBBase)
+def get_food_by_id(food_id: int, db: Session = Depends(get_db)):
+    food = crud.get_food_by_id(db, food_id)
+    if not food:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+    return food
+
+
 @router.post("/foods", response_model=schemas.FoodCreate)
 def create_food(food: schemas.FoodCreate, db: Session = Depends(get_db)):
     return crud.create_food(db, food=food)
