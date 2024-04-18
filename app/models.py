@@ -5,25 +5,37 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
+class Nation(Base):
+    __tablename__ = 'nation'
+
+    nation = Column(String(255), nullable=False, primary_key=True, unique=True)
+    element = Column(Text, nullable=False)
+
+    Affiliation = relationship('Affiliation', back_populates='Nation')
+
+
 class Affiliation(Base):
-    __tablename__ = 'affiliation'
+    __tablename__ = 'affiliations'
 
     affiliation_id = Column(Integer, primary_key=True, autoincrement=True)
-    affiliation_name = Column(String(255), nullable=False)
+    affiliation = Column(String(255), nullable=False)
+    nation = Column(String(255), ForeignKey(Nation.nation), nullable=False)
 
-    character_id = relationship("Character", back_populates="Affiliation")
+    Nation = relationship("Nation", back_populates="Affiliation")
+    Characters = relationship("Characters", back_populates="Affiliation")
 
 
 class Food(Base):
-    __tablename__ = 'food'
+    __tablename__ = 'foods'
 
     food_id = Column(Integer, primary_key=True, autoincrement=True)
-    food_name = Column(Text, nullable=False, unique=True)
+    food_name = Column(Text, nullable=False)
     food_utility = Column(Text, nullable=False)
     food_description = Column(Text, nullable=False)
     food_icon_img = Column(Text, nullable=False)
 
-    character = relationship("Character", back_populates="Food")
+    Characters = relationship("Characters", back_populates="Food")
+    FoodToMaterial = relationship("FoodToMaterial", back_populates="Food")
 
 
 class Characters(Base):
@@ -31,7 +43,7 @@ class Characters(Base):
 
     character_id = Column(Integer, primary_key=True, autoincrement=True)
     character_name = Column(String(255), nullable=False)
-    birthday_mouth = Column(String(255), nullable=False)
+    birthday_month = Column(String(255), nullable=False)
     birthday_date = Column(String(255), nullable=False)
     title = Column(String(255), nullable=False)
     vision = Column(String(255), nullable=False)
@@ -42,8 +54,8 @@ class Characters(Base):
     affiliation_id = Column(Integer, ForeignKey(Affiliation.affiliation_id), nullable=False)
     special_food_id = Column(Integer, ForeignKey(Food.food_id),nullable=False)
 
-    affiliation = relationship("Affiliation", back_populates="Character")
-    food = relationship("Food", back_populates="Characters")
+    Affiliation = relationship("Affiliation", back_populates="Characters")
+    Food = relationship("Food", back_populates="Characters")
 
 
 class LivingBeingType(Base):
@@ -52,7 +64,7 @@ class LivingBeingType(Base):
     living_being_type_id = Column(Integer, primary_key=True, autoincrement=True)
     living_being_type = Column(Text, nullable=False, unique=True)
 
-    living_being = relationship("LivingBeing", back_populates="LivingBeingType")
+    LivingBeing = relationship("LivingBeing", back_populates="LivingBeingType")
 
 
 class LivingBeing(Base):
@@ -64,7 +76,7 @@ class LivingBeing(Base):
     living_being_icon_img = Column(Text, nullable=False)
     living_being_type_id = Column(Integer, ForeignKey(LivingBeingType.living_being_type_id), nullable=False)
 
-    living_being_type = relationship("LivingBeingType", back_populates="LivingBeing")
+    LivingBeingType = relationship("LivingBeingType", back_populates="LivingBeing")
 
 
 class MaterialType(Base):
@@ -73,26 +85,20 @@ class MaterialType(Base):
     material_type_id = Column(Integer, primary_key=True, autoincrement=True)
     material_type = Column(Text, nullable=False, unique=True)
 
-    material = relationship("Material", back_populates="MaterialType")
+    Material = relationship("Material", back_populates="MaterialType")
 
 
 class Material(Base):
     __tablename__ = 'material'
 
     material_id = Column(Integer, primary_key=True, autoincrement=True)
-    material_name = Column(Text, nullable=False, unique=True)
+    material_name = Column(Text, nullable=False)
     material_description = Column(Text, nullable=False)
     material_icon_img = Column(Text, nullable=False)
     material_type_id = Column(Integer, ForeignKey(MaterialType.material_type_id), nullable=False)
 
-    material_type = relationship("MaterialType", back_populates="Material")
-
-
-class Nation(Base):
-    __tablename__ = 'nation'
-
-    nation = Column(String(255), nullable=False, primary_key=True, unique=True)
-    element = Column(Text, nullable=False)
+    MaterialType = relationship("MaterialType", back_populates="Material")
+    FoodToMaterial = relationship("FoodToMaterial", back_populates="Material")
 
 
 class FoodToMaterial(Base):
@@ -100,3 +106,6 @@ class FoodToMaterial(Base):
 
     food_id = Column(Integer, ForeignKey(Food.food_id), primary_key=True, nullable=False)
     material_id = Column(Integer, ForeignKey(Material.material_id), primary_key=True, nullable=False)
+
+    Food = relationship("Food", back_populates="FoodToMaterial")
+    Material = relationship("Material", back_populates="FoodToMaterial")

@@ -7,7 +7,7 @@ from ....dependencies import get_db
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.NationBase])
+@router.get("/nation", response_model=List[schemas.NationBase], operation_id="get_nations")
 def get_nations(db: Session = Depends(get_db)):
     nations = crud.get_all_nations(db)
     if not nations:

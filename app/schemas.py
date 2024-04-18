@@ -6,14 +6,18 @@ from app.models import MaterialType
 
 class CharactersBase(BaseModel):
     character_name: str
-    birthday_mouth: str
-    birthday_date: str
+    birthday_month: int
+    birthday_date: int
     title: str
     vision: str
     constellation: str
     avatar_img: str
     avatar_icon_img: str
     namecard_img: str
+
+
+class CharactersWithA(CharactersBase):
+    affiliation: str
 
 
 class CharactersCreate(CharactersBase):
@@ -34,16 +38,17 @@ class CharactersInDBBase(CharactersBase):
         from_attributes = True
 
 
-class Character(CharactersInDBBase):
+class Characters(CharactersInDBBase):
     pass
 
 
-class CharacterInDB(CharactersInDBBase):
+class CharactersInDB(CharactersInDBBase):
     pass
 
 
 class AffiliationBase(BaseModel):
-    affiliation_name: str
+    affiliation: str
+    nation: str
 
 
 class AffiliationCreate(AffiliationBase):
@@ -113,11 +118,15 @@ class FoodCreate(FoodBase):
     pass
 
 
-class FooUpdate(FoodBase):
+class FoodUpdate(FoodBase):
     pass
 
 
-class FooInDBBase(FoodBase):
+class FoodDelete(FoodBase):
+    pass
+
+
+class FoodInDBBase(FoodBase):
     food_id: int
 
     class Config:
